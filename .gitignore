@@ -1,0 +1,2 @@
+data/*.parquet
+!data/sample_*.parquet
