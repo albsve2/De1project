@@ -17,9 +17,9 @@ def main():
     df = load_and_filter(spark, HDFS_INPUT_PATH) # Preprocess data
 
     # Count amount of trips per hour and route
-    result = (df.groupBy("pickup_hour", "route")
+    result = (df.groupBy("time_stamp", "route")
                 .agg(count("*").alias("trip_count"))
-                .orderBy("pickup_hour", col("trip_count").desc()))
+                .orderBy("time_stamp", col("trip_count").desc()))
 
     # Save to HDFS
     result.write.mode("overwrite").parquet(HDFS_OUTPUT_PATH)
