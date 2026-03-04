@@ -24,4 +24,4 @@ def main():
     # Save to HDFS
     result.write.mode("overwrite").parquet(HDFS_OUTPUT_PATH)
 
-    if __name__ == "__main__": main()
+if __name__ == "__main__": main()
