@@ -10,6 +10,8 @@
 # the number of active workers between runs by editing /opt/spark/conf/workers 
 # and restarting the cluster using stop-all.sh and start-all.sh.
 
+#---HORIZONTAL SCALING---
+
 echo "Running Horizontal Test: 1 Worker (2 Cores)"
 # MANUAL PREREQUISITE: Comment out 2 workers in /opt/spark/conf/workers and restart Spark.
 time spark-submit --master spark://192.168.2.53:7077 --conf spark.driver.host=192.168.2.53 --conf spark.driver.bindAddress=192.168.2.53 --py-files src/config.py,src/etl_job.py src/analysis_job.py
@@ -21,6 +23,8 @@ time spark-submit --master spark://192.168.2.53:7077 --conf spark.driver.host=19
 echo "Running Horizontal Test: 3 Workers (6 Cores)"
 # MANUAL PREREQUISITE: Ensure all 3 workers are active in /opt/spark/conf/workers and restart Spark.
 time spark-submit --master spark://192.168.2.53:7077 --conf spark.driver.host=192.168.2.53 --conf spark.driver.bindAddress=192.168.2.53 --py-files src/config.py,src/etl_job.py src/analysis_job.py
+
+#---VERTICAL (DOWN)SCALING---
 
 echo "Running Vertical Test: 1 Worker (1 Core)"
 # MANUAL PREREQUISITE: Only 1 worker active. We use flags to restrict it to 1 worker.
@@ -35,6 +39,5 @@ echo "Running Vertical Test: 3 Worker (3 Core)"
 time spark-submit --master spark://192.168.2.53:7077 --conf spark.driver.host=192.168.2.53 --conf spark.driver.bindAddress=192.168.2.53 --executor-cores 1 --total-executor-cores 3 --py-files src/config.py,src/etl_job.py src/analysis_job.py
 
 
-echo "All benchmark commands completed!"
 
 
