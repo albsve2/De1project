@@ -23,8 +23,18 @@ echo "Running Horizontal Test: 3 Workers (6 Cores)"
 time spark-submit --master spark://192.168.2.53:7077 --conf spark.driver.host=192.168.2.53 --conf spark.driver.bindAddress=192.168.2.53 --py-files src/config.py,src/etl_job.py src/analysis_job.py
 
 echo "Running Vertical Test: 1 Worker (1 Core)"
-# MANUAL PREREQUISITE: Only 1 worker active. We use flags to restrict it to 1 core.
+# MANUAL PREREQUISITE: Only 1 worker active. We use flags to restrict it to 1 worker.
 time spark-submit --master spark://192.168.2.53:7077 --conf spark.driver.host=192.168.2.53 --conf spark.driver.bindAddress=192.168.2.53 --executor-cores 1 --total-executor-cores 1 --py-files src/config.py,src/etl_job.py src/analysis_job.py
 
+echo "Running Vertical Test: 2 Worker (2 Core)"
+# MANUAL PREREQUISITE: 2 workers active. We use flags to restrict it to 2 workers.
+time spark-submit --master spark://192.168.2.53:7077 --conf spark.driver.host=192.168.2.53 --conf spark.driver.bindAddress=192.168.2.53 --executor-cores 1 --total-executor-cores 2 --py-files src/config.py,src/etl_job.py src/analysis_job.py
+
+echo "Running Vertical Test: 3 Worker (3 Core)"
+# MANUAL PREREQUISITE: All workers active. 
+time spark-submit --master spark://192.168.2.53:7077 --conf spark.driver.host=192.168.2.53 --conf spark.driver.bindAddress=192.168.2.53 --executor-cores 1 --total-executor-cores 3 --py-files src/config.py,src/etl_job.py src/analysis_job.py
+
+
 echo "All benchmark commands completed!"
+
 
