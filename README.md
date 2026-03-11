@@ -305,7 +305,24 @@ De1project/
 - **Location in HDFS:** `hdfs:///data/taxi/*.parquet`
 - **Output:** `hdfs:///output/avg_trip_time`
 
-Do not overwrite or delete files in `/data/taxi/`.
+First data needs to be downloaded to VM
+```bash
+# Download data
+./download_data.sh
+
+# If error 403 occur then download manually, fill in year and month
+wget -P ~/taxi_data "https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_{year}_{month}.parquet"
+
+```
+Data can now be uploaded to hdfs
+```bash
+# Create folder in hdfs to store data
+hdfs dfs -mkdir -p /data/taxi
+
+# Upload data to folder
+hdfs dfs -put taxi_data /data/taxi 
+```
+---
 
 ---
 
