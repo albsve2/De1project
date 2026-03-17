@@ -235,7 +235,8 @@ stop-dfs.sh
 hdfs dfsadmin -report
 
 # Open SSH tunnel on your local machine to view Spark UI
-ssh -i /path/to/key.pem -L 8080::8080 ubuntu@
+ssh -i /path/to/key.pem -L 8080::8080 ubuntu@<FLOATING_IP>
+
 # Then open http://localhost:8080 in your browser
 ```
 
@@ -337,3 +338,44 @@ hdfs dfs -put taxi_data /data/taxi
 Access requires an open SSH tunnel or direct access to the internal network.
 
 ---
+
+## 11. Weak Scaling Experiment
+
+Weak scaling measures how runtime changes as both the number of workers and the 
+amount of data are increased proportionally. Ideal weak scaling produces a flat 
+runtime — doubling the workers and data should take the same time as the baseline.
+
+### Configuration
+
+| Run | Workers | Cores | Files | Years |
+|-----|---------|-------|-------|-------|
+| 1   | 1       | 1     | 24    | 2012–2013 |
+| 2   | 2       | 2     | 48    | 2012–2015 |
+| 3   | 3       | 3     | 72    | 2012–2017 |
+
+Each run uses 1 core per worker and processes ~24 files per worker, keeping the 
+data-per-core ratio constant across all runs.
+
+### Running the experiment
+
+Before each run, update `src/config.py` with the appropriate input path and output 
+path, then submit:
+```bash
+time spark-submit --master spark://192.168.2.53:7077 \
+  --total-executor-cores <N> \
+  --py-files src/config.py,src/etl_job.py \
+  src/analysis_job.py
+```
+
+Results are written to:
+- `hdfs:///output/run1_weak_scaling`
+- `hdfs:///output/run2_weak_scaling`
+- `hdfs:///output/run3_weak_scaling`
+
+### Results
+
+| Run | Workers | Cores | Files | Runtime |
+|-----|---------|-------|-------|---------|
+| 1   | 1       | 1     | 24    | TBD     |
+| 2   | 2       | 2     | 48    | TBD     |
+| 3   | 3       | 3     | 72    | TBD     |
