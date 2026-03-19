@@ -372,10 +372,3 @@ Results are written to:
 - `hdfs:///output/run2_weak_scaling`
 - `hdfs:///output/run3_weak_scaling`
 
-### Results
-
-| Run | Workers | Cores | Files | Runtime |
-|-----|---------|-------|-------|---------|
-| 1   | 1       | 1     | 24    | TBD     |
-| 2   | 2       | 2     | 48    | TBD     |
-| 3   | 3       | 3     | 72    | TBD     |
