@@ -372,3 +372,50 @@ Results are written to:
 - `hdfs:///output/run2_weak_scaling`
 - `hdfs:///output/run3_weak_scaling`
 
+---
+
+## 12. Strong Scaling Experiment
+
+Strong scaling measures how runtime changes as the number of workers and cores are increased while the dataset size remains strictly constant. Ideal strong scaling produces a linear speedup — doubling the resources should take half the time of the baseline.
+
+### Configuration
+
+| Run | Scaling Type | Workers | Cores/Worker | Total Cores | Data Size |
+|-----|--------------|---------|--------------|-------------|-----------|
+| 1   | Baseline     | 1       | 1            | 1           | 11.7 GB   |
+| 2   | Vertical     | 1       | 2            | 2           | 11.7 GB   |
+| 3   | Horizontal   | 2       | 1            | 2           | 11.7 GB   |
+| 4   | Horizontal   | 2       | 2            | 4           | 11.7 GB   |
+| 5   | Horizontal   | 3       | 1            | 3           | 11.7 GB   |
+| 6   | Max Config   | 3       | 2            | 6           | 11.7 GB   |
+
+Each run processes the exact same 11.7 GB dataset, isolating the performance impact of adding computational resources.
+
+### Running the experiment
+
+Before each horizontal run, you must manually isolate the active workers by commenting out unused IPs in `/opt/spark/conf/workers` and restarting the cluster. Then submit the benchmark:
+
+```bash
+# 1. Isolate active workers for the specific run
+nano /opt/spark/conf/workers
+
+# 2. Restart the cluster to apply the isolation
+/opt/spark/sbin/stop-all.sh && /opt/spark/sbin/start-all.sh
+
+# 3. Execute the benchmark 
+time spark-submit --master spark://130.238.28.216:7077 \
+  --conf spark.driver.host=130.238.28.216 \
+  --conf spark.driver.bindAddress=130.238.28.216 \
+  --executor-cores <C> \
+  --total-executor-cores <N> \
+  --py-files src/config.py,src/etl_job.py \
+  src/analysis_job.py
+
+Results are written to:
+
+- `hdfs:///output/run1_strong_scaling`
+- `hdfs:///output/run2_strong_scaling`
+- `hdfs:///output/run3_strong_scaling`
+- `hdfs:///output/run4_strong_scaling`
+- `hdfs:///output/run5_strong_scaling`
+- `hdfs:///output/run6_strong_scaling`
